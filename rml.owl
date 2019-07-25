@@ -1,0 +1,45 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<#Caballero> a rr:TriplesMap ;
+    rr:logicalTable "Caballero" ;
+    rr:predicateObjectMap [ rr:objectMap [ rr:column "esAmigoDe" ;
+                    rr:datatype <ex:Persona> ] ;
+            rr:predicate "<http://example.org/ns#esAmigoDe>" ],
+        [ rr:objectMap [ rr:column "nombre" ;
+                    rr:datatype <rdfs:Literal> ] ;
+            rr:predicate "<http://www.co-ode.org/ontologies/ont.owl#nombre>" ],
+        [ rr:objectMap [ rr:column "cabalgaEn" ;
+                    rr:datatype <ex:Caballo> ] ;
+            rr:predicate "<http://example.org/ns#cabalgaEn>" ],
+        [ rr:objectMap [ rr:column "edad" ;
+                    rr:datatype <xsd:integer> ] ;
+            rr:predicate "<http://www.co-ode.org/ontologies/ont.owl#edad>" ] ;
+    rr:subjectMap [ rr:class "<http://example.org/ns#Caballero>" ;
+            rr:template "http://example.org/ns/Caballero/{ID}" ;
+            rr:termType rr:IRI ] .
+
+<#Persona> a rr:TriplesMap ;
+    rr:logicalTable "Persona" ;
+    rr:predicateObjectMap [ rr:objectMap [ rr:column "edad" ;
+                    rr:datatype <xsd:integer> ] ;
+            rr:predicate "<http://www.co-ode.org/ontologies/ont.owl#edad>" ],
+        [ rr:objectMap [ rr:column "esAmigoDe" ;
+                    rr:datatype <ex:Persona> ] ;
+            rr:predicate "<http://example.org/ns#esAmigoDe>" ],
+        [ rr:objectMap [ rr:column "nombre" ;
+                    rr:datatype <rdfs:Literal> ] ;
+            rr:predicate "<http://www.co-ode.org/ontologies/ont.owl#nombre>" ] ;
+    rr:subjectMap [ rr:class "<http://example.org/ns#Persona>" ;
+            rr:template "http://example.org/ns/Persona/{ID}" ;
+            rr:termType rr:IRI ] .
+
+<#SerHumano> a rr:TriplesMap ;
+    rr:logicalTable "SerHumano" ;
+    rr:subjectMap [ rr:class "<http://example.org/ns#SerHumano>" ;
+            rr:template "http://example.org/ns/SerHumano/{ID}" ;
+            rr:termType rr:IRI ] .
+

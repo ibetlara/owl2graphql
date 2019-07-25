@@ -12,7 +12,7 @@ if val_output == "":
     val_output = "example.graphql"
 
 if val == "":
-    val = "C:\\Users\\Ibet\\Desktop\\dbpedia\\dbpedia_2016-04.owl"
+    val = "esquema2.owl"
 model = ontospy.Ontospy(val, verbose=True)
 
 
@@ -93,8 +93,35 @@ t = Template(
 clases = model.all_classes
 ontoproperties = model.all_properties
 
+from rdflib import Graph
+
+g = Graph()
+g.parse("rml.owl", format="turtle")
+
+qres = g.query(
+    """
+    SELECT DISTINCT ?class ?propuri
+       WHERE {
+          ?aname rr:subjectMap ?smap.
+          ?smap rr:class  ?class .
+          OPTIONAL {?aname rr:predicateObjectMap ?predicateObjectMap .
+          ?predicateObjectMap rr:predicate ?propuri . 
+          }
+       }""")
+clases_rml = {}
+for row in qres:
+    if row[0].value not in clases_rml:
+        clase = row[0].value.replace("<","").replace(">","")
+        clases_rml[clase] = []
+    if row[1]:
+        clases_rml[clase].append(row[1].value)
+
+list_keys = list(clases_rml.keys())
 for clases_i in clases:
     '''se crean las instacias de clases'''
+    #Si no estna en las clases de rml entonces no la proceso
+    if clases_i.uri not  in list_keys:
+        continue
     padres = clases_i._parents
     lista_padres = []
     lista_hijos = []
@@ -114,9 +141,12 @@ for clases_i in clases:
         classobj = OntClass(clases_i.uri, id_service, clases_i.locale, lista_padres)
         list_all_class[clases_i.uri] = classobj
 for property_i in ontoproperties:
+
     if len(property_i.domains) != 0:
         for domain in property_i.domains:
             if domain.uri in list_all_class:
+                if property_i.uri not in clases_rml[domain.uri]:
+                    continue
                 ranges = property_i.ranges
                 if len(ranges) == 0:
                     # Si no tienen al menos un rango no agrego
