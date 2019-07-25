@@ -110,17 +110,17 @@ qres = g.query(
        }""")
 clases_rml = {}
 for row in qres:
-    if row[0].value not in clases_rml:
-        clase = row[0].value.replace("<","").replace(">","")
+    clase = row[0].value.replace("<", "").replace(">", "")
+    if clase not in clases_rml:
         clases_rml[clase] = []
     if row[1]:
-        clases_rml[clase].append(row[1].value)
+        clases_rml[clase].append(row[1].value.replace("<","").replace(">",""))
 
 list_keys = list(clases_rml.keys())
 for clases_i in clases:
     '''se crean las instacias de clases'''
     #Si no estna en las clases de rml entonces no la proceso
-    if clases_i.uri not  in list_keys:
+    if str(clases_i.uri) not in list_keys:
         continue
     padres = clases_i._parents
     lista_padres = []
@@ -145,7 +145,7 @@ for property_i in ontoproperties:
     if len(property_i.domains) != 0:
         for domain in property_i.domains:
             if domain.uri in list_all_class:
-                if property_i.uri not in clases_rml[domain.uri]:
+                if str(property_i.uri) not in clases_rml[str(domain.uri)]:
                     continue
                 ranges = property_i.ranges
                 if len(ranges) == 0:
